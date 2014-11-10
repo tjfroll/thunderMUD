@@ -19,10 +19,10 @@ body {
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: 80px;
+	bottom: 100px;
 
 	display: block;
-	padding: 10px;
+	padding: 20px;
 }
 
 #viewport {
@@ -38,8 +38,8 @@ body {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 70px;
-	padding: 10px;
+	height: 80px;
+	padding: 20px;
 
 	display: block;
 }
@@ -51,7 +51,7 @@ body {
 
 	padding: 10px;
 
-	background-color: #888;
+	background-color: #777;
 	transition: .1s all;
 	resize: none;
 }
