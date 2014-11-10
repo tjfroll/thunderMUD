@@ -1,0 +1,61 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	text-indent: 0;
+}
+
+body {
+	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	background-color: #333;
+}
+
+#viewport-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 80px;
+
+	display: block;
+	padding: 10px;
+}
+
+#viewport {
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+
+	background-color: #444;
+}
+
+#primary-input-container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 70px;
+	padding: 10px;
+
+	display: block;
+}
+
+#primary-input-container textarea {
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+
+	padding: 10px;
+
+	background-color: #888;
+	transition: .1s all;
+	resize: none;
+}
+
+textarea:focus, textarea:active {
+	outline: 4px auto #CCC;
+}
