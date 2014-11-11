@@ -1,3 +1,8 @@
+require 'jquery'
+require 'velocity'
+Input = require 'Input'
+Viewport = require 'Viewport'
+
 # It all starts here, baby.
 # 
 class Main

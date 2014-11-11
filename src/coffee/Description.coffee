@@ -1,4 +1,4 @@
-class Description extends Perspective
+class Description
 
 	constructor: (@parent, opts) ->
 		

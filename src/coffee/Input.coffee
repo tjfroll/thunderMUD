@@ -1,3 +1,5 @@
+UI = require 'UI'
+
 class Input extends UI
 
 	constructor: (parent, opts) ->
