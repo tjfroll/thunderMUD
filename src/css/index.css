@@ -32,6 +32,8 @@ body {
 }
 #view .view-box {
   position: absolute;
+  overflow-y: auto;
+  overflow-x: hidden;
   box-shadow: 0 0 5px 0 #999 inset;
   background-color: #555;
 }

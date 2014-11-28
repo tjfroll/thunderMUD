@@ -36,19 +36,27 @@
 		</div>
 
 		<div id="input-container">
-			<textarea id="text-input" name="text-input" placeholder="Enter commands here"></textarea>
+			<textarea id="text-input" name="text-input" placeholder="Type commands here - enter to submit - shift+enter for newline"></textarea>
 		</div>
-		
+
 	    <script>
 	      var socket = io();
-	      $('#view').click(function(){
-	      	var val = $('#text-input').val();
-	        socket.emit('chat message', val);
-	        $('#text-input').val('');
-	        return false;
+	      $('#text-input').bind('keypress', function(event) {
+	      	var key = event.keyCode || event.which;
+	      	if(key === 13  && !event.shiftKey) {
+		      	var val = $('#text-input').val();
+		        socket.emit('chat message', val);
+		        $('#text-input').val('');
+      			event.preventDefault();
+      			return false
+	        }
 	      });
-	      socket.on('chat message', function(msg){
+	      socket.on('chat message', function(msg) {
 	        $('#feedback .text-view').append($('<p>').text(msg));
+	        var feedback = $('#feedback');
+	        var height = feedback.prop('scrollHeight');
+	        console.log(height);
+	        feedback.scrollTop(height);
 	      });
 	    </script>
 	</body>
