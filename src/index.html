@@ -6,8 +6,9 @@
 		<link rel="stylesheet" type="text/css" href="css/index.css">
 
 		<!-- PLUGINS -->
-		<script type="text/javascript" src="../bower_components/velocity/velocity.js"></script>
 		<script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+		<script type="text/javascript" src="../bower_components/velocity/velocity.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
 		<!-- CODE -->
 		<script type="text/javascript" src="index.js"></script>
@@ -20,15 +21,36 @@
 	</head>
 
 	<body>
-		<div id="viewport-container"> 
-			<div id="viewport">
-
+		<div id="view-container">
+			<div id="view">
+				<div id="room" class="view-box">
+					<div class="text-view"></div>
+				</div>
+				<div id="inventory" class="view-box">
+					<div class="text-view"></div>
+				</div>
+				<div id="feedback" class="view-box">
+					<div class="text-view"></div>
+				</div>
 			</div>
 		</div>
 
-		<div id="primary-input-container">
-			<textarea name="primary-input" placeholder="Enter commands here"></textarea>
+		<div id="input-container">
+			<textarea id="text-input" name="text-input" placeholder="Enter commands here"></textarea>
 		</div>
+		
+	    <script>
+	      var socket = io();
+	      $('#view').click(function(){
+	      	var val = $('#text-input').val();
+	        socket.emit('chat message', val);
+	        $('#text-input').val('');
+	        return false;
+	      });
+	      socket.on('chat message', function(msg){
+	        $('#feedback .text-view').append($('<p>').text(msg));
+	      });
+	    </script>
 	</body>
 
 </html>

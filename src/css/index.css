@@ -1,65 +1,94 @@
 * {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	text-indent: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  text-indent: 0;
 }
-
 body {
-	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-	position: relative;
-	width: 100%;
-	height: 100%;
-
-	background-color: #333;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  background-color: #333;
 }
-
-#viewport-container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 100px;
-
-	display: block;
-	padding: 20px;
+#view-container {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  padding: 1%;
 }
-
-#viewport {
-	width: 100%;
-	height: 100%;
-	border-radius: 5px;
-
-	padding: 10px;
-	word-break: break-all;
-
-	overflow: hidden;
-	background-color: #444;
+#view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  word-break: break-all;
+  overflow: hidden;
+  background-color: #444;
 }
-
-#primary-input-container {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 80px;
-	padding: 20px;
-
-	display: block;
+#view .view-box {
+  position: absolute;
+  box-shadow: 0 0 5px 0 #999 inset;
+  background-color: #555;
 }
-
-#primary-input-container textarea {
-	width: 100%;
-	height: 100%;
-	border-radius: 5px;
-
-	padding: 10px;
-
-	background-color: #777;
-	transition: .1s all;
-	resize: none;
+#view .view-box .text-view {
+  padding: 20px;
+  color: #EEE;
 }
-
-textarea:focus, textarea:active {
-	outline: 4px auto #CCC;
+#room {
+  top: 0;
+  bottom: 20%;
+  left: 0;
+  right: 30%;
+  margin-top: 1%;
+  margin-bottom: .5%;
+  margin-left: 1%;
+  margin-right: .5%;
+}
+#inventory {
+  top: 0;
+  bottom: 20%;
+  left: 70%;
+  right: 0;
+  margin-top: 1%;
+  margin-bottom: .5%;
+  margin-left: .5%;
+  margin-right: 1%;
+}
+#feedback {
+  top: 80%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-top: .5%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+#input-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80px;
+  padding: 1%;
+  display: block;
+}
+#input-container textarea {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  color: #CCC;
+  background-color: #555;
+  transition: .1s all;
+  resize: none;
+}
+#input-container textarea:focus,
+#input-container textarea:active {
+  outline: 4px auto #CCC;
 }
