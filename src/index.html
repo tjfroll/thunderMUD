@@ -13,28 +13,26 @@
     <!-- CODE -->
     <script type="text/javascript" src="index.js"></script>
     <script>
+      var viewBox, view, room, roomText, inventory, inventoryText, feedback, feedbackText, inputBox, input;
       var active = false;
       $(document).ready(function() {
-          var viewBox, view, room, roomText, inventory, inventoryText, feedback, feedbackText, inputBox, input;
-
           // -- Viewport -- //
-          viewBox = make(document.body, {id: 'view-container'});
-          view = make(viewBox, {id: 'view'});
-          room = make(view, {classes: 'view-box', id: 'room'});
-          roomText = make(room, {classes: 'text-view'});
-          inventory = make(view, {classes: 'view-box', id: 'inventory'});
-          inventoryText = make(inventory, {classes: 'text-view'});
-          feedback = make(view, {classes: 'view-box', id: 'feedback'});
-          feedbackText = make(feedback, {classes: 'text-view'});
+          viewBox = create(document.body, {id: 'view-container'});
+          view = create(viewBox, {id: 'view'});
+          room = create(view, {classes: 'view-box', id: 'room'});
+          roomText = create(room, {classes: 'text-view'});
+          inventory = create(view, {classes: 'view-box', id: 'inventory'});
+          inventoryText = create(inventory, {classes: 'text-view'});
+          feedback = create(view, {classes: 'view-box', id: 'feedback'});
+          feedbackText = create(feedback, {classes: 'text-view'});
 
           // -- Input -- //
-          inputBox = make(document.body, {id: 'input-container'});
+          inputBox = create(document.body, {id: 'input-container'});
           addEnterListener();
-          input = make(inputBox, {id: 'text-input', element: 'textarea', placeholder: 'Type commands here - enter to submit - shift + enter for newline'});
+          input = create(inputBox, {id: 'text-input', element: 'textarea', placeholder: 'Type commands here - enter to submit - shift + enter for newline'});
       });
 
       var addEnterListener = function() {
-        console.log('adding enter listener');
         window.onkeydown = function(event) {
           var key, input, val;
           if(!active) {
@@ -43,7 +41,6 @@
             if(key === 13  && !event.shiftKey) {
               input = document.getElementById('text-input');
               val = input.value;
-              console.log('input value', val)
               socket.emit('chat message', val);
               input.value = '';
               event.preventDefault();
@@ -57,7 +54,7 @@
         }
       }
 
-      var make = function(parent, opts) {
+      var create = function(parent, opts) {
         if(opts.element)
           el = document.createElement(opts.element);
         else
@@ -68,6 +65,8 @@
           el.className = opts.classes;
         if(opts.name)
           el.name = opts.name;
+        if(opts.html)
+          el.innerHTML = opts.html
         if(opts.placeholder)
           el.setAttribute('placeholder', opts.placeholder);
         parent.appendChild(el);
@@ -82,10 +81,8 @@
     <script>
       var socket = io();
       socket.on('chat message', function(msg) {
-        $('#feedback .text-view').append($('<p>').text(msg));
-        var feedback = $('#feedback');
-        var height = feedback.prop('scrollHeight');
-        feedback.scrollTop(height);
+        create(feedbackText, {element: 'p', html: msg});
+        feedback.scrollTop = feedback.scrollHeight;
       });
     </script>
   </body>
