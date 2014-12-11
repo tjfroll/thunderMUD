@@ -1,64 +1,92 @@
 <html>
-	<head>
-		<!-- FONT -->
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-		
-		<link rel="stylesheet" type="text/css" href="css/index.css">
+  <head>
+    <!-- FONT -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" type="text/css" href="css/index.css">
 
-		<!-- PLUGINS -->
-		<script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
-		<script type="text/javascript" src="../bower_components/velocity/velocity.js"></script>
-		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <!-- PLUGINS -->
+    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../bower_components/velocity/velocity.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
-		<!-- CODE -->
-		<script type="text/javascript" src="index.js"></script>
-		<script>
-			$(document).ready(function() {
-				Main();
-			});
-		</script>
+    <!-- CODE -->
+    <script type="text/javascript" src="index.js"></script>
+    <script>
+      var active = false;
+      $(document).ready(function() {
+          var viewBox, view, room, roomText, inventory, inventoryText, feedback, feedbackText, inputBox, input;
 
-	</head>
+          // -- Viewport -- //
+          viewBox = make(document.body, {id: 'view-container'});
+          view = make(viewBox, {id: 'view'});
+          room = make(view, {classes: 'view-box', id: 'room'});
+          roomText = make(room, {classes: 'text-view'});
+          inventory = make(view, {classes: 'view-box', id: 'inventory'});
+          inventoryText = make(inventory, {classes: 'text-view'});
+          feedback = make(view, {classes: 'view-box', id: 'feedback'});
+          feedbackText = make(feedback, {classes: 'text-view'});
 
-	<body>
-		<div id="view-container">
-			<div id="view">
-				<div id="room" class="view-box">
-					<div class="text-view"></div>
-				</div>
-				<div id="inventory" class="view-box">
-					<div class="text-view"></div>
-				</div>
-				<div id="feedback" class="view-box">
-					<div class="text-view"></div>
-				</div>
-			</div>
-		</div>
+          // -- Input -- //
+          inputBox = make(document.body, {id: 'input-container'});
+          addEnterListener();
+          input = make(inputBox, {id: 'text-input', element: 'textarea', placeholder: 'Type commands here - enter to submit - shift + enter for newline'});
+      });
 
-		<div id="input-container">
-			<textarea id="text-input" name="text-input" placeholder="Type commands here - enter to submit - shift+enter for newline"></textarea>
-		</div>
+      var addEnterListener = function() {
+        console.log('adding enter listener');
+        window.onkeydown = function(event) {
+          var key, input, val;
+          if(!active) {
+            active = true;
+            key = event.keyCode || event.which;
+            if(key === 13  && !event.shiftKey) {
+              input = document.getElementById('text-input');
+              val = input.value;
+              console.log('input value', val)
+              socket.emit('chat message', val);
+              input.value = '';
+              event.preventDefault();
+              return false;
+            }
+          }
+        }
 
-	    <script>
-	      var socket = io();
-	      $('#text-input').bind('keypress', function(event) {
-	      	var key = event.keyCode || event.which;
-	      	if(key === 13  && !event.shiftKey) {
-		      	var val = $('#text-input').val();
-		        socket.emit('chat message', val);
-		        $('#text-input').val('');
-      			event.preventDefault();
-      			return false
-	        }
-	      });
-	      socket.on('chat message', function(msg) {
-	        $('#feedback .text-view').append($('<p>').text(msg));
-	        var feedback = $('#feedback');
-	        var height = feedback.prop('scrollHeight');
-	        console.log(height);
-	        feedback.scrollTop(height);
-	      });
-	    </script>
-	</body>
+        window.onkeyup = function(event) {
+            active = false;
+        }
+      }
 
+      var make = function(parent, opts) {
+        if(opts.element)
+          el = document.createElement(opts.element);
+        else
+          el = document.createElement('div');
+        if(opts.id)
+          el.id = opts.id;
+        if(opts.classes)
+          el.className = opts.classes;
+        if(opts.name)
+          el.name = opts.name;
+        if(opts.placeholder)
+          el.setAttribute('placeholder', opts.placeholder);
+        parent.appendChild(el);
+        return el;
+      }
+    </script>
+
+  </head>
+
+  <body>
+
+    <script>
+      var socket = io();
+      socket.on('chat message', function(msg) {
+        $('#feedback .text-view').append($('<p>').text(msg));
+        var feedback = $('#feedback');
+        var height = feedback.prop('scrollHeight');
+        feedback.scrollTop(height);
+      });
+    </script>
+  </body>
 </html>
