@@ -1,263 +1,187 @@
 (function() {
-  var Description;
+  var Component, exports;
 
-  Description = (function() {
-    function Description(parent, opts) {
+  Component = (function() {
+    Component.prototype.$ = function() {
+      return $(this.node);
+    };
+
+    Component.prototype.defaults = function() {
+      this.node = {};
+      this.type = 'div';
+      return this.parent = document.body;
+    };
+
+    function Component(parent, opts) {
       this.parent = parent;
+      this.parseOpts(opts);
+      this.node = document.createElement(this.type);
+      this.applySettings();
+      this.parent.appendChild(this.node);
     }
 
-    Description.prototype.text = function() {
-      return this.text;
+    Component.prototype.append = function(opts) {
+      return new Component(this.node, opts);
     };
 
-    Description.prototype.addType = function(type, desc) {
-      return this.types[type] = desc;
+    Component.prototype.parseOpts = function(opts) {
+      if (opts.type) {
+        this.type = opts.type;
+      }
+      if (opts.id) {
+        this.id = opts.id;
+      }
+      if (opts.classes) {
+        this.classes = opts.classes;
+      }
+      if (opts.name) {
+        this.name = opts.name;
+      }
+      if (opts.html) {
+        this.html = opts.html;
+      }
+      if (opts.placeholder) {
+        return this.placeholder = opts.placeholder;
+      }
     };
 
-    Description.prototype.getType = function(type) {
-      return this.types[type];
+    Component.prototype.applySettings = function() {
+      if (this.id) {
+        this.node.id = this.id;
+      }
+      if (this.classes) {
+        el.className = this.classes;
+      }
+      if (this.name) {
+        el.name = this.name;
+      }
+      if (this.html) {
+        el.innerHTML = this.html;
+      }
+      if (this.placeholder) {
+        return this.node.setAttribute('placeholder', this.placeholder);
+      }
     };
 
-    return Description;
+    return Component;
 
   })();
 
-}).call(this);
-
-(function() {
-  var Equipment, Item,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Item = require('Item');
-
-  Equipment = (function(_super) {
-    __extends(Equipment, _super);
-
-    function Equipment(parent, opts) {
-      this.Desc = new Description;
-    }
-
-    return Equipment;
-
-  })(Item);
+  exports = Component;
 
 }).call(this);
 
 (function() {
-  var Input, UI,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var Component, Main, exports;
 
-  UI = require('UI');
+  Component = require('./Component');
 
-  Input = (function(_super) {
-    __extends(Input, _super);
+  Main = (function() {
+    Main.viewBox = {};
 
-    function Input(parent, opts) {
-      this.input = parent.getElementById('primary-input');
+    Main.view = {};
+
+    Main.room = {};
+
+    Main.roomText = {};
+
+    Main.inventory = {};
+
+    Main.inventoryText = {};
+
+    Main.feedback = {};
+
+    Main.feedbackText = {};
+
+    Main.socket = {};
+
+    Main.input = {};
+
+    Main.inputBox = {};
+
+    function Main(parent, opts) {
+      this.createInterface();
+      this.addEventListener();
+      this.startServer();
     }
 
-    Input.prototype._makeListeners = function() {
-      return this.input.on('keyPress', 'enter', (function(_this) {
-        return function() {
-          return _this.parseInput();
+    Main.prototype.startServer = function() {
+      this.socket = io();
+      return this.socket.on('chat message', (function(_this) {
+        return function(msg) {
+          _this.feedbackText.append({
+            type: 'p',
+            html: msg
+          });
+          return _this.feedback.node.scrollTop = _this.feedback.node.scrollHeight;
         };
       })(this));
     };
 
-    Input.prototype.parseInput = function() {
-      return this.execute(this.input.val());
+    Main.prototype.createInterface = function() {
+      this.viewBox = new Component(document.body, {
+        id: 'view-container'
+      });
+      this.view = this.viewBox.append({
+        id: 'view'
+      });
+      this.room = this.view.append({
+        classes: 'view-box',
+        id: 'room'
+      });
+      this.roomText = this.room.append({
+        classes: 'text-view'
+      });
+      this.inventory = this.view.append({
+        classes: 'view-box',
+        id: 'inventory'
+      });
+      this.inventoryText = this.inventory.append({
+        classes: 'text-view'
+      });
+      this.feedback = this.view.append({
+        classes: 'view-box',
+        id: 'feedback'
+      });
+      this.feedbackText = this.feedback.append({
+        classes: 'text-view'
+      });
+      this.inputBox = new Component(document.body, {
+        id: 'input-container'
+      });
+      return this.input = this.inputBox.append({
+        id: 'text-input',
+        element: 'textarea',
+        placeholder: 'Type commands here - enter to submit - shift + enter for newline'
+      });
     };
 
-    Input.prototype.execute = function(command) {
-      return this.input;
-    };
-
-    return Input;
-
-  })(UI);
-
-}).call(this);
-
-(function() {
-  var Inventory;
-
-  Inventory = (function() {
-    Inventory.prototype.list = [];
-
-    function Inventory(parent, opts) {}
-
-    Inventory.prototype.add = function(item) {
-      return this.list.push(item);
-    };
-
-    Inventory.prototype.remove = function(item) {
-      if (this.list[item]) {
-        return this.list["delete"](item);
-      }
-    };
-
-    Inventory.prototype.view = function(viewer) {
-      return this.list;
-    };
-
-    return Inventory;
-
-  })();
-
-}).call(this);
-
-(function() {
-  var Item;
-
-  Item = (function() {
-    function Item(opts) {
-      this.Desc = new Description;
-      this.Loc = new Location;
-    }
-
-    return Item;
-
-  })();
-
-}).call(this);
-
-(function() {
-  var Location;
-
-  Location = (function() {
-    function Location(parent, opts) {}
-
-    return Location;
-
-  })();
-
-}).call(this);
-
-(function() {
-  var Input, Main, Viewport;
-
-  require('jquery');
-
-  require('velocity');
-
-  Input = require('Input');
-
-  Viewport = require('Viewport');
-
-  Main = (function() {
-    function Main(parent, opts) {
-      this.wrapper = parent.createElement('div');
-      this.wrapper.id = 'full-wrapper';
-      this.Input = this._makeInput(opts);
-      this.Viewport = this._makeViewport(opts);
-    }
-
-    Main.prototype._makeInput = function(opts) {
-      return new Input(this.wrapper, opts);
-    };
-
-    Main.prototype._makeViewport = function(opts) {
-      return new Viewport(this.wrapper, opts);
+    Main.prototype.addEnterListener = function() {
+      var active;
+      active = false;
+      window.onkeydown = function(event) {
+        var key, val;
+        if (!active) {
+          active = true;
+          key = event.keyCode || event.which;
+          if (key === 13 && !event.shiftKey) {
+            val = this.input.node.value;
+            this.socket.emit('chat message', val);
+            this.input.node.value = '';
+            event.preventDefault();
+            return false;
+          }
+        }
+      };
+      return window.onkeyup = function(event) {
+        return active = false;
+      };
     };
 
     return Main;
 
   })();
 
-}).call(this);
-
-(function() {
-  var Player;
-
-  Player = (function() {
-    function Player(opts) {
-      this.Loc = new Location;
-      this.Desc = new Description;
-      this.Inv = new Inventory;
-    }
-
-    return Player;
-
-  })();
-
-}).call(this);
-
-(function() {
-  var Item, Room,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Item = require('Item');
-
-  Room = (function(_super) {
-    __extends(Room, _super);
-
-    Room.prototype._ENTER_DESC = 'You have entered the room.';
-
-    Room.prototype._EXIT_DESC = 'You have exited the room.';
-
-    Room.prototype._LOOK_DESC = 'You are looking at the room.';
-
-    function Room() {
-      this.Desc = new Description(this);
-      this.Desc.addPersepctive('enter', this._ENTER_DESC);
-      this.Desc.addPerspective('exit', this._EXIT_DESC);
-      this.Desc.addPerspective('look', this._LOOK_DESC);
-    }
-
-    Room.prototype.setDesc = function() {};
-
-    Room.prototype.onEnter = function() {
-      return this.desc('enter');
-    };
-
-    Room.prototype.onExit = function() {
-      return this.desc('exit');
-    };
-
-    return Room;
-
-  })(Item);
-
-}).call(this);
-
-(function() {
-  var UI;
-
-  UI = (function() {
-    function UI(parent, opts) {}
-
-    UI.prototype.hide = function() {};
-
-    UI.prototype.show = function() {};
-
-    UI.prototype.update = function() {};
-
-    return UI;
-
-  })();
-
-}).call(this);
-
-(function() {
-  var UI, Viewport,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  UI = requre('UI');
-
-  Viewport = (function(_super) {
-    __extends(Viewport, _super);
-
-    function Viewport(parent, opts) {
-      this.container = parent.createElement('div');
-      this.container.id = 'primary-viewport';
-    }
-
-    return Viewport;
-
-  })(UI);
+  exports = Main;
 
 }).call(this);
